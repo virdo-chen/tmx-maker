@@ -3,6 +3,22 @@ import tkinter as tk
 from tkinter import filedialog
 from PIL import ImageTk, Image
 
+"""
+   Copyright 2023 virdo-chen
+
+   Licensed under the Apache License, Version 2.0 (the "License");
+   you may not use this file except in compliance with the License.
+   You may obtain a copy of the License at
+
+       http://www.apache.org/licenses/LICENSE-2.0
+
+   Unless required by applicable law or agreed to in writing, software
+   distributed under the License is distributed on an "AS IS" BASIS,
+   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+   See the License for the specific language governing permissions and
+   limitations under the License.
+"""
+
 imgs = ["编程猫.png", "会移动的砖块.png", "探月兔.png", "兔年编程猫.png", "邪恶的敌人2.png", "游戏通关2.png",
         "障碍物.png", "brick4.png", "草灵灵.png", "蓝雀.png", "涂鸦狐.png", "小巴格.png", "邪恶的敌人3.png",
         "元宝0.png", "block.png", "brick5.png", "春节编程猫.png", "木叶龙.png", "兔年编程猫-拜年.png", "小黄鸡.png",
