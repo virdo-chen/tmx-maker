@@ -4,7 +4,7 @@ from tkinter import filedialog
 from PIL import ImageTk, Image
 
 """
-   Copyright 2023 virdo-chen
+       Copyright 2023 virdo-chen
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
@@ -87,7 +87,51 @@ class Main_data_processor:
         self.bricks_data = [0 for _ in range(600)]
         self.walls_data = [0 for _ in range(600)]
 
-        self.load()
+        self.load_for_init()
+
+    # 和load函数几乎完全一样，只是为了防止windows系统上直接调用load会自动产生一个小窗口的小bug(因为load函数第二行用了filedialog.askopenfilename()函数，而此时还没有窗口)
+    def load_for_init(self):
+        self.tree = ET.parse("./prototype.xml").getroot()
+        for layer in self.tree.findall("layer"):
+            if layer.get("name") == "障碍物":
+                self.killers_data = eval("[" + layer.findtext("data") + "]")
+            elif layer.get("name") == "玩家":
+                self.player_data = eval("[" + layer.findtext("data") + "]")
+            elif layer.get("name") == "砖块":
+                self.bricks_data = eval("[" + layer.findtext("data") + "]")
+            else:
+                self.walls_data = eval("[" + layer.findtext("data") + "]")
+        # moving_bricks:
+        self.moving_bricks_data = []
+        objects = self.tree.findall("objectgroup/object")
+        for object in objects:
+            c = [None for _ in range(7)]
+            properties = object.find("properties").findall("property")
+            if object.find("properties/property", {"name": ""}) is not None and \
+                    object.find("properties/property", {"name": ""}).get("name") == "boundary_left":
+                c[0] = 1
+                for property_ in properties:
+                    if property_.get("name") == "boundary_left":
+                        c[1] = int(property_.get("value"))
+                    elif property_.get("name") == "boundary_right":
+                        c[2] = int(property_.get("value"))
+                    else:
+                        c[3] = int(property_.get("value"))
+            else:
+                c[0] = 0
+                for property_ in properties:
+                    if property_.get("name") == "boundary_bottom":
+                        c[1] = int(property_.get("value"))
+                    elif property_.get("name") == "boundary_top":
+                        c[2] = int(property_.get("value"))
+                    else:
+                        c[3] = int(property_.get("value"))
+
+            c[4] = int(float(object.get("x")))/2
+            c[5] = int(float(object.get("y")))/2
+            c[6] = int(object.get("gid"))
+            self.moving_bricks_data.append(c)
+        del objects
 
     def load(self):
         try:
@@ -228,6 +272,7 @@ class App:
         self.main_window = tk.Tk()
         self.main_window.title("TMX Maker")
         self.main_window.geometry("800x600")
+        self.main_window.iconbitmap("./imgs/player.ico")
 
         self.main1()
 
